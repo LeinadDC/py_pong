@@ -34,7 +34,7 @@ def show_gamezone(zone):
     for row in zone:
         print(" ".join(row))
 
-@app.route('/getGame', methods = ['GET'])
+@app.route('/getInfo', methods = ['GET'])
 def index():
     return jsonify(
         pongZone=game[0],
@@ -48,7 +48,7 @@ def index():
     )
 
 
-@app.route('/move', methods = ['POST'])
+@app.route('/moveBall', methods = ['POST'])
 def movement():
     global activePost, ballPosition                 #Obtiene el id del form (porque en envia mediante body al ser POST)
     playerID = request.form["id"]                   #Compara si el jugador haciendo el requests es el activo
@@ -76,22 +76,22 @@ def movement():
 
     )
 
-@app.route('/getEnemyMove/<string:player>', methods = ['GET'])
+@app.route('/movePaddle/<string:player>', methods = ['GET'])
 def getenemymove(player):
     global ballPosition,activeGet
 
-    if player == activeGet:
-        if player == "1":
-            playerpaddle = randint(0, 10)
-            if playerpaddle == ballPosition:
-                game[0][1][ballPosition] = "0"
-                newOrigin = randint(0, 10)
-                ballPosition = newOrigin
-                game[0][0][newOrigin] = "X"
-                game[7] = "2"
+    if player == activeGet:                     #Verifica que el jugador que hace el request sea el activo
+        if player == "1":                       #Revisa cual jugador es
+            playerpaddle = randint(0, 10)       #Genera movimiento de paleta al azar
+            if playerpaddle == ballPosition:    #Compara paleta con la posicion de la bola (TRUE)
+                game[0][1][ballPosition] = "0"  #La bola "desaparece"
+                newOrigin = randint(0, 10)      #Se mueve al azar al otro lado
+                ballPosition = newOrigin        #La posicion se la bola se convierte la nueva posicion
+                game[0][0][newOrigin] = "X"     #Se posiciona la bola al otro lado
+                game[7] = "2"                   #Se cambia de jugador activo
                 activeGet = game[7]
-            else:
-                game[4] = game[4] - 1
+            else:                               #FALSE
+                game[4] = game[4] - 1           #Punto para el otro jugador
                 game[1] = "Punto jugador 2"
         else:
             playerpaddle = ballPosition
