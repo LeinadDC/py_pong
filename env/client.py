@@ -44,6 +44,14 @@ def testConnection():
 
 testConnection()
 
+def getGameInfo():
+    request = requests.get(getGameUrl)
+    gameInfoJSON = json.dumps(request.json())
+    gameInfoJSONParse = json.loads(gameInfoJSON)
+    ##recibe bolas e info del juego
+    return gameInfoJSONParse
+
+
 def post():
     request = requests.post(postMoveUrl, data={'id': "1"})
     gamePostJSON = json.dumps(request.json())

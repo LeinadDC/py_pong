@@ -50,34 +50,24 @@ def index():
 
 @app.route('/move', methods = ['POST'])
 def movement():
-    global activePost, ballPosition
-    #Obtiene el id del form (porque en envia mediante body al ser POST)
-    playerID = request.form["id"]
-    #Compara si el jugador haciendo el requests es el activo
+    global activePost, ballPosition                 #Obtiene el id del form (porque en envia mediante body al ser POST)
+    playerID = request.form["id"]                   #Compara si el jugador haciendo el requests es el activo
     if playerID == activePost:
-        #Se genera un movimiento al azar
-        playermove = randint(0,10)
-        #Se compara cual jugador es el que está haciendo el movimiento
-        if playerID == "1":
+        playermove = randint(0,10)                  #Se genera un movimiento al azar
+        if playerID == "1":                         #Se compara cual jugador es el que está haciendo el movimiento
             game[0][1][playermove] = "X"
             game[6] = str(2)
             activePost = game[6]
-
         else:
             game[0][0][playermove] = "X"
             game[6] = str(1)
             activePost = game[6]
     else:
-        #Si no es el turno del jugador se le duelve un texto en JSON
-        return jsonify("No es su turno.")
-    #Se hace una deepCopy del estado del juego actual para pasarlo al historico
-    newgamerecord = copy.deepcopy(game)
-    #Se agrega el estado actual del juego al historico
-    gamerecord.append(newgamerecord)
-    #La posición de la bola agarra el mismo valor del movimiento que hizo el jugador
-    ballPosition = playermove
-    #Se le regresa la zona de juego
-    return jsonify(
+        return jsonify("No es su turno.")    #Si no es el turno del jugador se le duelve un texto en JSON
+    newgamerecord = copy.deepcopy(game)      #Se hace una deepCopy del estado del juego actual para pasarlo al historico
+    gamerecord.append(newgamerecord)         #Se agrega el estado actual del juego al historico
+    ballPosition = playermove           #La posición de la bola agarra el mismo valor del movimiento que hizo el jugador
+    return jsonify(                     #Se le regresa la zona de juego
         pongZone=game[0],
         balls=game[4],
         ballPosition=game[5],
