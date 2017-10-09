@@ -10,12 +10,12 @@ full_url = ""
 #Path de los metodos para jugar
 getGamePath = "/getInfo"
 postMovementPath = "/moveBall"
-movePaddlePath = "/movePaddle/1"
+getEnemyMovePath = "/movePaddle/2"
 
 #Creacion de URLs completos para las acciones del cliente
 getGameUrl = full_url+getGamePath
 postMoveUrl = full_url+postMovementPath
-getEnemyMoveUrl = full_url+movePaddlePath
+getEnemyMoveUrl = full_url+getEnemyMovePath
 
 def getServerInfo():
     global server_ip ,port,full_url,getGameUrl,postMoveUrl,getEnemyMoveUrl
@@ -25,7 +25,7 @@ def getServerInfo():
     full_url = protocolo + server_ip + ":" + port
     getGameUrl = full_url + getGamePath
     postMoveUrl = full_url + postMovementPath
-    getEnemyMoveUrl = full_url + movePaddlePath
+    getEnemyMoveUrl = full_url + getEnemyMovePath
 
 getServerInfo()
 
@@ -53,7 +53,7 @@ def getGameInfo():
 
 
 def post():
-    request = requests.post(postMoveUrl, data={'id': "1"})
+    request = requests.post(postMoveUrl, data={'id': "2"})
     try:
         gamePostJSON = json.dumps(request.json())
         gamePostJSONParse = json.loads(gamePostJSON)
@@ -74,37 +74,40 @@ def movePaddle():
 
 def juega():
     while True:
+        gameInfo = getGameInfo()
+        bolas = gameInfo["balls"]
+        puntaje_p1 = gameInfo["score_p1"]
+        puntaje_p2 = gameInfo["score_p2"]
+        if (puntaje_p1 != 2) and (puntaje_p2 != 2):
             gameInfo = getGameInfo()
-            bolas = gameInfo["balls"]
-            puntaje_p1 = gameInfo["score_p1"]
-            puntaje_p2 = gameInfo["score_p2"]
-            if (puntaje_p1 != 2) and (puntaje_p2 != 2):
-                gameInfo = getGameInfo()
-                turnoMovimiento = gameInfo["playerMovingBall"]
-                if turnoMovimiento == "1":
-                    postResponse= mueveBola()
-                    if "balls" not in postResponse:
-                        mueveRaqueta()
-                    else:
-                        mueveBola()
-                else:
+            turnoMovimiento = gameInfo["playerMovingBall"]
+            turnoPaddle = gameInfo["playerMovingPaddle"]
+            if turnoMovimiento == "2":
+                postResponse = mueveBola()
+                if "balls" not in postResponse:
                     mueveRaqueta()
+                else:
+                    mueveBola()
             else:
-                sys.exit("Fin del juego")
+                mueveRaqueta()
+        else:
+            sys.exit("Fin del juego")
+
 
 
 def mueveBola():
-    time.sleep(5)
+    time.sleep(6)
     postResponse = post()
-    print("Jugador 1 hace post")
+    print("Jugador 2 hace post")
     print(postResponse)
     return postResponse
 
 def mueveRaqueta():
-    time.sleep(8)
-    print("Jugador 1 hace get")
+    time.sleep(9)
+    print("Jugador 2 hace get")
     getResponse = movePaddle()
     print(getResponse)
+
 
 
 
