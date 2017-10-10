@@ -14,8 +14,8 @@ gameRound = 1
 balls = 3
 ballPosition = 0
 gamerecord = []
-activePost = "1"
-activeGet = "2"
+activePost = ""
+activeGet = ""
 playerPaddle = ""
 
 for x in range(2):
@@ -55,6 +55,14 @@ def index():
 def movement():
     playerID = request.form["id"]
 
+    if game[6] == "" and game[7] == "":
+        if playerID == "1":
+            game[7] = "2"
+            game[6] = "1"
+        else:
+            game[7] = "1"
+            game[6] = "2"
+
     if game[6] == game[7]:
         return jsonify("Mueva la raqueta antes de mover la bola")
     else:
@@ -68,8 +76,7 @@ def movement():
                 game[6] = str(1)
         else:
             return jsonify("No le toca mover la bola")
-    newgamerecord = copy.deepcopy(game)
-    gamerecord.append(newgamerecord)
+    addRecord()
     game[5] = playermove
     return jsonify(
         pongZone=game[0],
@@ -81,50 +88,62 @@ def movement():
 
     )
 
+
+def addRecord():
+    newgamerecord = copy.deepcopy(game)
+    gamerecord.append(newgamerecord)
+
+
 @app.route('/movePaddle/<string:player>', methods = ['GET'])
 def getenemymove(player):
     ballPosition = game[5]
+    if game[3] > 0:
 
-    if ballPosition == 0:
-        "Debe esperar a que el otro jugador mueva"
-    else:
-            if player == game[7]:
-                if player == "1":
-                    playerpaddle = str(randint(0,10))
-                    game[8] = playerpaddle
-                    if playerpaddle == str(ballPosition):
-                        game[0][0][ballPosition] = "0"
-                        newOrigin = randint(0,10)
-                        game[5] = newOrigin
-                        game[0][1][newOrigin] = "X"
-                        game[7] = "2"
+        if game[6] == "" and game[7] == "":
+            "Debe esperar a que el otro jugador mueva"
+        else:
+                if player == game[7]:
+                    if player == "1":
+                        playerpaddle = str(randint(0,10))
+                        game[8] = playerpaddle
+
+                        if playerpaddle == str(ballPosition):
+                            game[0][0][ballPosition] = "0"
+                            newOrigin = randint(0,10)
+                            game[5] = newOrigin
+                            game[0][1][newOrigin] = "X"
+                            game[7] = "2"
+                            addRecord()
+                        else:
+                            game[0][0][ballPosition] = "0"
+                            game[0][1][ballPosition] = "0"
+                            game[2] = game[2] + 1
+                            game[4] = game[4] - 1
+                            game[7] = "2"
+                            addRecord()
+
                     else:
-                        game[0][0][ballPosition] = "0"
-                        game[0][1][ballPosition] = "0"
-                        game[2] = game[2] + 1
-                        game[4] = game[4] - 1
-                        game[7] = "2"
+                        playerpaddle = str(randint(0,10))
+                        game[8] = playerpaddle
 
+                        if playerpaddle == str(ballPosition):
+                            game[0][1][ballPosition] = "0"
+                            newOrigin = randint(0,10)
+                            game[5] = newOrigin
+                            game[0][0][newOrigin] = "X"
+                            game[7] = "1"
+                            addRecord()
+                        else:
+                            game[0][0][ballPosition] = "0"
+                            game[0][1][ballPosition] = "0"
+                            game[1] = game[1] + 1
+                            game[4] = game[4] - 1
+                            game[7] = "1"
+                            addRecord()
                 else:
-                    playerpaddle = str(randint(0,10))
-                    game[8] = playerpaddle
-
-                    if playerpaddle == str(ballPosition):
-                        game[0][1][ballPosition] = "0"
-                        newOrigin = randint(0,10)
-                        game[5] = newOrigin
-                        game[0][0][newOrigin] = "X"
-                        game[7] = "1"
-                    else:
-                        game[0][0][ballPosition] = "0"
-                        game[0][1][ballPosition] = "0"
-                        game[1] = game[1] + 1
-                        game[4] = game[4] - 1
-                        game[7] = "1"
-            else:
-                return jsonify("No le toca mover la raqueta")
-
-
+                    return jsonify("No le toca mover la raqueta")
+    else:
+        return jsonify("Se terminó el juego")
     return jsonify(
         pongZone = game[0],
         ballPosition = game[5],

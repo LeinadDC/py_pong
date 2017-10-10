@@ -75,7 +75,6 @@ def movePaddle():
 def juega():
     while True:
             gameInfo = getGameInfo()
-            bolas = gameInfo["balls"]
             puntaje_p1 = gameInfo["score_p1"]
             puntaje_p2 = gameInfo["score_p2"]
             if (puntaje_p1 != 2) and (puntaje_p2 != 2):
@@ -88,20 +87,20 @@ def juega():
                     else:
                         mueveBola()
                 else:
-                    mueveRaqueta()
+                    mueveBola()
             else:
                 sys.exit("Fin del juego")
 
 
 def mueveBola():
-    time.sleep(5)
+    time.sleep(3)
     postResponse = post()
     print("Jugador 1 hace post")
     print(postResponse)
     return postResponse
 
 def mueveRaqueta():
-    time.sleep(8)
+    time.sleep(4)
     print("Jugador 1 hace get")
     getResponse = movePaddle()
     print(getResponse)

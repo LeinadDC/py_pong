@@ -89,21 +89,21 @@ def juega():
                 else:
                     mueveBola()
             else:
-                mueveRaqueta()
+                mueveBola()
         else:
             sys.exit("Fin del juego")
 
 
 
 def mueveBola():
-    time.sleep(6)
+    time.sleep(4)
     postResponse = post()
     print("Jugador 2 hace post")
     print(postResponse)
     return postResponse
 
 def mueveRaqueta():
-    time.sleep(9)
+    time.sleep(5)
     print("Jugador 2 hace get")
     getResponse = movePaddle()
     print(getResponse)
