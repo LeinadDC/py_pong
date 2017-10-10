@@ -9,7 +9,7 @@ full_url = ""
 
 #Path de los metodos para jugar
 getGamePath = "/getInfo"
-postMovementPath = "/moveBall"
+postMovementPath = "/startGame"
 getEnemyMovePath = "/movePaddle/2"
 
 #Creacion de URLs completos para las acciones del cliente
@@ -75,13 +75,11 @@ def movePaddle():
 def juega():
     while True:
         gameInfo = getGameInfo()
-        bolas = gameInfo["balls"]
         puntaje_p1 = gameInfo["score_p1"]
         puntaje_p2 = gameInfo["score_p2"]
         if (puntaje_p1 != 2) and (puntaje_p2 != 2):
             gameInfo = getGameInfo()
-            turnoMovimiento = gameInfo["playerMovingBall"]
-            turnoPaddle = gameInfo["playerMovingPaddle"]
+            turnoMovimiento = gameInfo["activePost"]
             if turnoMovimiento == "2":
                 postResponse = mueveBola()
                 if "balls" not in postResponse:
@@ -96,7 +94,11 @@ def juega():
 
 
 def mueveBola():
+<<<<<<< HEAD
     time.sleep(4)
+=======
+    time.sleep(3)
+>>>>>>> 6d9d90cd2db65c045ffcee0aa9264c91cf05f883
     postResponse = post()
     print("Jugador 2 hace post")
     print(postResponse)

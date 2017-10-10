@@ -9,7 +9,7 @@ full_url = ""
 
 #Path de los metodos para jugar
 getGamePath = "/getInfo"
-postMovementPath = "/moveBall"
+postMovementPath = "/startGame"
 movePaddlePath = "/movePaddle/1"
 
 #Creacion de URLs completos para las acciones del cliente
@@ -58,7 +58,7 @@ def post():
         gamePostJSON = json.dumps(request.json())
         gamePostJSONParse = json.loads(gamePostJSON)
     except:
-        return("No es su turno")
+        print(gamePostJSONParse)
 
     return gamePostJSONParse
 
@@ -68,7 +68,7 @@ def movePaddle():
         gameGetJSON = json.dumps(request.json())
         gameGetJSONParse = json.loads(gameGetJSON)
     except:
-        return("No es su turno")
+        print(gameGetJSONParse)
     return gameGetJSONParse
 
 
@@ -79,7 +79,7 @@ def juega():
             puntaje_p2 = gameInfo["score_p2"]
             if (puntaje_p1 != 2) and (puntaje_p2 != 2):
                 gameInfo = getGameInfo()
-                turnoMovimiento = gameInfo["playerMovingBall"]
+                turnoMovimiento = gameInfo["activePost"]
                 if turnoMovimiento == "1":
                     postResponse= mueveBola()
                     if "balls" not in postResponse:
@@ -100,7 +100,11 @@ def mueveBola():
     return postResponse
 
 def mueveRaqueta():
+<<<<<<< HEAD
     time.sleep(4)
+=======
+    time.sleep(5)
+>>>>>>> 6d9d90cd2db65c045ffcee0aa9264c91cf05f883
     print("Jugador 1 hace get")
     getResponse = movePaddle()
     print(getResponse)
